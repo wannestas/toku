@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
@@ -50,5 +51,14 @@ apollo {
             schemaFile.set(file("src/main/graphql/anilist/schema.graphqls"))
         }
 
+    }
+}
+
+tasks {
+    withType(KotlinCompile::class) {
+        kotlinOptions {
+            jvmTarget = "21"
+            freeCompilerArgs = listOf("-Xcontext-receivers")
+        }
     }
 }

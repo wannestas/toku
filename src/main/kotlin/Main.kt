@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
@@ -50,10 +55,25 @@ fun main() = singleWindowApplication {
     var animes by remember { mutableStateOf(emptyList<Anime>()) }
     var selectedAnime: Anime? by remember { mutableStateOf(null) }
     MaterialTheme {
-        Column {
-            SearchBar(onQuery = {
-                animes = it
-            }, clearAnime = { animes = emptyList() })
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+//                if (selectedAnime != null) {
+                Column {
+                    IconButton(modifier = Modifier.padding(8.dp), onClick = { selectedAnime = null }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
+                    }
+                }
+
+//                }
+                Column {
+                    SearchBar(onQuery = {
+                        animes = it
+                    })
+                }
+                Column {
+
+                }
+            }
             if (selectedAnime == null) {
                 FlowRow(modifier = Modifier.fillMaxWidth().padding(16.dp).verticalScroll(rememberScrollState())) {
                     for (anime in animes) {
@@ -72,14 +92,13 @@ fun main() = singleWindowApplication {
 fun SearchBar(onQuery: (List<Anime>) -> Unit) {
     var knop by remember { mutableStateOf("Search") }
     var queryTitle by remember { mutableStateOf("naruto") }
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
             value = queryTitle,
             onValueChange = { queryTitle = it },
-            maxLines = 1,
-            modifier = Modifier.padding(bottom = 8.dp)
+            maxLines = 1
         )
-        Button(modifier = Modifier.padding(8.dp), onClick = {
+        Button(modifier = Modifier.padding(start = 8.dp), onClick = {
             knop = "Searching"
             CoroutineScope(Dispatchers.IO).launch {
                 onQuery(emptyList())
