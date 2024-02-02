@@ -43,27 +43,14 @@ import kotlinx.coroutines.withContext
 import me.wtas.fileLocator.graphql.anilist.SearchQuery
 import me.wtas.fileLocator.graphql.anilist.type.MediaType
 import sources.anime.Anime
+import sources.anime.AnimeSource
+import sources.anime.anilist.AnilistSource
 import sources.anime.anilist.toInternal
 import java.io.ByteArrayInputStream
 import java.io.IOException
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+val animeSource: AnimeSource = AnilistSource()
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
-    }
-}
-
-val apolloClient = ApolloClient.Builder()
-    .serverUrl("https://graphql.anilist.co")
-    .build()
 @OptIn(ExperimentalLayoutApi::class)
 fun main() = singleWindowApplication {
     var title by remember { mutableStateOf("naruto") }
@@ -77,10 +64,7 @@ fun main() = singleWindowApplication {
                 animes = emptyList()
                 knop = "Searching"
                 CoroutineScope(Dispatchers.IO).launch {
-                    println(title)
-                    animes = apolloClient.query(
-                        SearchQuery(type = Optional.present(MediaType.ANIME), search = Optional.present(title))
-                    ).execute().data?.Page?.media?.mapNotNull { it?.toInternal() } ?: emptyList()
+                    animes = animeSource.search(title)
                     knop = "searched :)"
                 }
             }) {

@@ -1,5 +1,5 @@
 package sources.anime
 
 interface AnimeSource {
-    fun search(query: String): List<Anime>;
+    suspend fun search(title: String): List<Anime>
 }
