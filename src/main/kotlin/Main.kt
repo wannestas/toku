@@ -1,7 +1,5 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -29,23 +27,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.singleWindowApplication
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.wtas.fileLocator.graphql.anilist.SearchQuery
-import me.wtas.fileLocator.graphql.anilist.type.MediaType
 import sources.anime.Anime
 import sources.anime.AnimeSource
 import sources.anime.anilist.AnilistSource
-import sources.anime.anilist.toInternal
 import java.io.ByteArrayInputStream
 import java.io.IOException
 
@@ -53,38 +45,66 @@ val animeSource: AnimeSource = AnilistSource()
 
 @OptIn(ExperimentalLayoutApi::class)
 fun main() = singleWindowApplication {
-    var title by remember { mutableStateOf("naruto") }
     var animes by remember { mutableStateOf(emptyList<Anime>()) }
-    var knop by remember { mutableStateOf("Search") }
+    var selectedAnime: Anime? by remember { mutableStateOf(null) }
     MaterialTheme {
-    Column {
-        Row {
-            OutlinedTextField(value = title, onValueChange = { title = it }, maxLines = 1, modifier = Modifier.padding(bottom = 8.dp))
-            Button(onClick = {
-                animes = emptyList()
-                knop = "Searching"
-                CoroutineScope(Dispatchers.IO).launch {
-                    animes = animeSource.search(title)
-                    knop = "searched :)"
+        Column {
+            Row {
+                Button(onClick = { selectedAnime = null }) {
+                    Text("←")
                 }
-            }) {
-                Text(knop)
+                SearchBar(onQuery = {
+                    animes = it
+                }, clearAnime = { animes = emptyList() })
+            }
+            if (selectedAnime == null) {
+                FlowRow(modifier = Modifier.fillMaxWidth().padding(16.dp).verticalScroll(rememberScrollState())) {
+                    for (anime in animes) {
+                        AnimeCard(anime) { selectedAnime = anime }
+                    }
+                }
+            } else {
+                Text(selectedAnime!!.title.default)
             }
         }
+    }
+}
 
-        FlowRow(modifier = Modifier.fillMaxWidth().padding(16.dp).verticalScroll(rememberScrollState())) {
-            for (anime in animes) {
-                Column(modifier = Modifier.padding(8.dp).width(200.dp)) {
-                     AsyncImage(load = { loadImageBitmap(anime.coverImage.toString())},
-                                painterFor = { remember { BitmapPainter(it) } },
-                                contentDescription = anime.title.default,
-                                modifier = Modifier.width(200.dp))
-                    Text(anime.title.default, softWrap = true)
-                }
-
+@Composable
+fun SearchBar(onQuery: (List<Anime>) -> Unit, clearAnime: () -> Unit) {
+    var knop by remember { mutableStateOf("Search") }
+    var queryTitle by remember { mutableStateOf("naruto") }
+    Row {
+        OutlinedTextField(
+            value = queryTitle,
+            onValueChange = { queryTitle = it },
+            maxLines = 1,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Button(onClick = {
+            knop = "Searching"
+            CoroutineScope(Dispatchers.IO).launch {
+                clearAnime()
+                onQuery(animeSource.search(queryTitle))
+                knop = "searched :)"
             }
+        }) {
+            Text(knop)
         }
-    }}
+    }
+}
+
+@Composable
+fun AnimeCard(anime: Anime, onClick: () -> Unit) {
+    Column(modifier = Modifier.padding(8.dp).width(200.dp).clickable(onClick = onClick)) {
+        AsyncImage(
+            load = { loadImageBitmap(anime.coverImage.toString()) },
+            painterFor = { remember { BitmapPainter(it) } },
+            contentDescription = anime.title.default,
+            modifier = Modifier.width(200.dp)
+        )
+        Text(anime.title.default, softWrap = true)
+    }
 }
 
 @Composable
