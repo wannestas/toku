@@ -38,6 +38,7 @@ import kotlinx.coroutines.withContext
 import sources.anime.Anime
 import sources.anime.AnimeSource
 import sources.anime.anilist.AnilistSource
+import sources.anime.singleAnimeView
 import java.io.ByteArrayInputStream
 import java.io.IOException
 
@@ -49,14 +50,9 @@ fun main() = singleWindowApplication {
     var selectedAnime: Anime? by remember { mutableStateOf(null) }
     MaterialTheme {
         Column {
-            Row {
-                Button(onClick = { selectedAnime = null }) {
-                    Text("←")
-                }
-                SearchBar(onQuery = {
-                    animes = it
-                }, clearAnime = { animes = emptyList() })
-            }
+            SearchBar(onQuery = {
+                animes = it
+            }, clearAnime = { animes = emptyList() })
             if (selectedAnime == null) {
                 FlowRow(modifier = Modifier.fillMaxWidth().padding(16.dp).verticalScroll(rememberScrollState())) {
                     for (anime in animes) {
@@ -64,7 +60,8 @@ fun main() = singleWindowApplication {
                     }
                 }
             } else {
-                Text(selectedAnime!!.title.default)
+                singleAnimeView(selectedAnime!!, backOut = {selectedAnime = null})
+
             }
         }
     }
@@ -81,7 +78,7 @@ fun SearchBar(onQuery: (List<Anime>) -> Unit, clearAnime: () -> Unit) {
             maxLines = 1,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        Button(onClick = {
+        Button(modifier = Modifier.padding(8.dp), onClick = {
             knop = "Searching"
             CoroutineScope(Dispatchers.IO).launch {
                 clearAnime()
