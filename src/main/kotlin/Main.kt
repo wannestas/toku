@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -60,7 +61,7 @@ fun main() = singleWindowApplication {
                     }
                 }
             } else {
-                singleAnimeView(selectedAnime!!, backOut = {selectedAnime = null})
+                singleAnimeView(selectedAnime!!, backOut = { selectedAnime = null })
 
             }
         }
@@ -68,7 +69,7 @@ fun main() = singleWindowApplication {
 }
 
 @Composable
-fun SearchBar(onQuery: (List<Anime>) -> Unit, clearAnime: () -> Unit) {
+fun SearchBar(onQuery: (List<Anime>) -> Unit) {
     var knop by remember { mutableStateOf("Search") }
     var queryTitle by remember { mutableStateOf("naruto") }
     Row {
@@ -81,7 +82,7 @@ fun SearchBar(onQuery: (List<Anime>) -> Unit, clearAnime: () -> Unit) {
         Button(modifier = Modifier.padding(8.dp), onClick = {
             knop = "Searching"
             CoroutineScope(Dispatchers.IO).launch {
-                clearAnime()
+                onQuery(emptyList())
                 onQuery(animeSource.search(queryTitle))
                 knop = "searched :)"
             }
