@@ -54,11 +54,9 @@ apollo {
     }
 }
 
-tasks {
-    withType(KotlinCompile::class) {
-        kotlinOptions {
-            jvmTarget = "21"
-            freeCompilerArgs = listOf("-Xcontext-receivers")
-        }
+kotlin {
+    jvmToolchain(17) // also applies to the java task
+    compilerOptions {
+        freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 }
