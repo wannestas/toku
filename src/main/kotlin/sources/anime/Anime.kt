@@ -2,7 +2,6 @@ package sources.anime
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import me.wtas.fileLocator.graphql.anilist.type.MediaSeason
 import java.net.URI
 
 interface Anime {

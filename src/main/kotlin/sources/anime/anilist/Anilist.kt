@@ -4,14 +4,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import me.wtas.fileLocator.graphql.anilist.SearchQuery
-import me.wtas.fileLocator.graphql.anilist.type.MediaSeason
-import me.wtas.fileLocator.graphql.anilist.type.MediaStatus
-import sources.anime.Anime
-import sources.anime.NextAiringEpisode
-import sources.anime.Season
-import sources.anime.Status
-import sources.anime.Title
+import me.wtas.toku.graphql.anilist.SearchQuery
+import me.wtas.toku.graphql.anilist.type.MediaSeason
+import me.wtas.toku.graphql.anilist.type.MediaStatus
+import sources.anime.*
 import java.net.URI
 import kotlin.time.Duration.Companion.seconds
 

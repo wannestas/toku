@@ -2,9 +2,8 @@ package sources.anime.anilist
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
-import me.wtas.fileLocator.graphql.anilist.SearchQuery
-import me.wtas.fileLocator.graphql.anilist.type.MediaType
-import sources.anime.Anime
+import me.wtas.toku.graphql.anilist.SearchQuery
+import me.wtas.toku.graphql.anilist.type.MediaType
 import sources.anime.AnimeSource
 
 class AnilistSource() : AnimeSource {

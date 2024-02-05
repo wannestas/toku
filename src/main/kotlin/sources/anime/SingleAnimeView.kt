@@ -1,39 +1,30 @@
 package sources.anime
 
-import AsyncImage
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import loadImageBitmap
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun singleAnimeView(anime: Anime, backOut: () -> Unit) {
     val leftAreaWidth = 200.dp
     Column {
-        if (anime.bannerImage != null) {
-            AsyncImage(
-                load = { loadImageBitmap(anime.bannerImage.toString()) },
-                painterFor = { remember { BitmapPainter(it) } },
+        anime.bannerImage?.let {
+            KamelImage(
+                resource = asyncPainterResource(it),
                 contentDescription = anime.title.default + " Banner",
             )
         }
         Row {
-
-            AsyncImage(
-                load = { loadImageBitmap(anime.coverImage.toString()) },
-                painterFor = { remember { BitmapPainter(it) } },
+            KamelImage(
+                resource = asyncPainterResource(anime.coverImage),
                 contentDescription = anime.title.default,
                 modifier = Modifier.width(leftAreaWidth)
             )
