@@ -1,0 +1,9 @@
+Merge lookup and download into 1 external plugin that handles both
+
+getDownloadables on a plugin should return a list of trees where every leaf is a downloadable, to support display complex downloadables.
+It should be possible to choose 1 file of a batch torrent for example, even in nested batches.
+
+Favourites.
+
+Plugins need to supply a unique name.
+
