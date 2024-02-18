@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -95,9 +96,21 @@ fun InformationTagList(type: String, content: List<String>) {
 
 @Composable
 fun EpisodeList(anime: Anime) {
-    Column {
-        Row {
-            Text(text = "Episodes will be here")
+    LazyColumn {
+        // Add a single item
+        item {
+            Text(text = "First item")
         }
+
+        // Add 5 items
+        items(100) { index ->
+            Text(text = "Item: $index")
+        }
+
+        // Add another single item
+        item {
+            Text(text = "Last item")
+        }
+
     }
 }
