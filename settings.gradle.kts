@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Anime_Locator"
+rootProject.name = "toku"
