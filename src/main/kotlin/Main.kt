@@ -53,8 +53,7 @@ fun main() = singleWindowApplication {
                     }
                 }
             } else {
-                singleAnimeView(selectedAnime!!, backOut = { selectedAnime = null })
-
+                SingleAnimeView(selectedAnime!!, backOut = { selectedAnime = null })
             }
         }
     }

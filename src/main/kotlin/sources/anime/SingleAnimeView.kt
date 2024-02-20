@@ -13,7 +13,7 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
 @Composable
-fun singleAnimeView(anime: Anime, backOut: () -> Unit) {
+fun SingleAnimeView(anime: Anime, backOut: () -> Unit) {
     val leftAreaWidth = 200.dp
     Column {
         anime.bannerImage?.let {
