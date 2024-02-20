@@ -1,11 +1,11 @@
 package sources.anime
 
+import androidx.compose.foundation.layout.Box
 import KamelImage
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,48 +13,59 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.kamel.image.asyncPainterResource
+import sources.Media
 
 @Composable
-fun SingleAnimeView(anime: Anime, backOut: () -> Unit) {
+fun SingleMediaView(media: Media, backOut: () -> Unit) {
     val leftAreaWidth = 200.dp
     Column {
-        anime.bannerImage?.let {
+        media.bannerImage?.let {
             KamelImage(
                 resource = asyncPainterResource(it),
-                contentDescription = anime.title.default + " Banner",
+                contentDescription = media.defaultTitle + " Banner",
             )
         }
         Row {
-            KamelImage(
-                resource = asyncPainterResource(anime.coverImage),
-                contentDescription = anime.title.default,
-                modifier = Modifier.width(leftAreaWidth)
-            )
-            Text(anime.description)
+            if (media.coverImage != null) {
+                KamelImage(
+                    resource = asyncPainterResource(media.coverImage!!),
+                    contentDescription = media.defaultTitle,
+                    modifier = Modifier.width(leftAreaWidth)
+                )
+            } else {
+                Box(modifier = Modifier.width(leftAreaWidth)) {
+                    Text(media.defaultTitle)
+                }
+            }
+            media.description?.let { Text(it) }
+
         }
         Row {
-            InformationList(anime, Modifier.width(leftAreaWidth))
-            EpisodeList(anime)
+            InformationList(media, Modifier.width(leftAreaWidth))
+            ContentList(media)
         }
     }
 }
 
 @Composable
-fun InformationList(anime: Anime, modifier: Modifier) {
+fun InformationList(media: Media, modifier: Modifier) {
     Column(modifier = modifier) {
-        anime.run {
-            "Next Episode" tag nextAiringSchedule?.run { "Episode $episode: $time" }
-            "Format" tag format
-            "Episodes" tag "$duration minutes"
-            "Episode Duration" tag duration.toString()
-            "Status" tag status?.toString()
-            "Start Date" tag startDate?.toString()
-            "End Date" tag endDate?.toString()
-            "Season" tag startDate?.run { "$season $year" }
-            "Average Score" tag averageScore?.toString()
-            "Studios" tagList studios
-            "Genres" tagList genres
+        for (informationTag in media.informationTags) {
+            InformationTagList(informationTag.key, informationTag.values)
         }
+//        anime.run {
+//            "Next Episode" tag nextAiringSchedule?.run { "Episode $episode: $time" }
+//            "Format" tag format
+//            "Episodes" tag "$duration minutes"
+//            "Episode Duration" tag duration.toString()
+//            "Status" tag status?.toString()
+//            "Start Date" tag startDate?.toString()
+//            "End Date" tag endDate?.toString()
+//            "Season" tag startDate?.run { "$season $year" }
+//            "Average Score" tag averageScore?.toString()
+//            "Studios" tagList studios
+//            "Genres" tagList genres
+//        }
     }
 }
 
@@ -87,7 +98,7 @@ fun InformationTagList(type: String, content: List<String>) {
 }
 
 @Composable
-fun EpisodeList(anime: Anime) {
+fun ContentList(media: Media) {
     LazyColumn {
         // Add a single item
         item {

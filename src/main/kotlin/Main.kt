@@ -22,17 +22,15 @@ import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import sources.anime.Anime
-import sources.anime.AnimeSource
-import sources.anime.SingleAnimeView
-import sources.anime.anilist.AnilistSource
+import sources.Media
+import sources.anime.SingleMediaView
 
-val animeSource: AnimeSource = AnilistSource()
+val plugin: Plugin = DummyPlugin()
 
 @OptIn(ExperimentalLayoutApi::class)
 fun main() = singleWindowApplication {
-    var animes by remember { mutableStateOf(emptyList<Anime>()) }
-    var selectedAnime: Anime? by remember { mutableStateOf(null) }
+    var medias by remember { mutableStateOf(emptyList<Media>()) }
+    var selectedMedia: Media? by remember { mutableStateOf(null) }
     MaterialTheme {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
@@ -40,38 +38,36 @@ fun main() = singleWindowApplication {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                if (selectedAnime != null) {
                 Column {
-                    IconButton(modifier = Modifier.padding(8.dp), onClick = { selectedAnime = null }) {
+                    IconButton(modifier = Modifier.padding(8.dp), onClick = { selectedMedia = null }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
                     }
                 }
 
-//                }
                 Column {
                     SearchBar(onQuery = {
-                        animes = it
+                        medias = it
                     })
                 }
                 Column {
 
                 }
             }
-            if (selectedAnime == null) {
+            if (selectedMedia == null) {
                 FlowRow(modifier = Modifier.fillMaxWidth().padding(16.dp).verticalScroll(rememberScrollState())) {
-                    for (anime in animes) {
-                        AnimeCard(anime) { selectedAnime = anime }
+                    for (anime in medias) {
+                        AnimeCard(anime) { selectedMedia = anime }
                     }
                 }
             } else {
-                SingleAnimeView(selectedAnime!!, backOut = { selectedAnime = null })
+                SingleMediaView(selectedMedia!!, backOut = { selectedMedia = null })
             }
         }
     }
 }
 
 @Composable
-fun SearchBar(onQuery: (List<Anime>) -> Unit) {
+fun SearchBar(onQuery: (List<Media>) -> Unit) {
     var knop by remember { mutableStateOf("Search") }
     var queryTitle by remember { mutableStateOf("naruto") }
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -83,7 +79,7 @@ fun SearchBar(onQuery: (List<Anime>) -> Unit) {
         Button(modifier = Modifier.padding(start = 8.dp), onClick = {
             knop = "Searching"
             CoroutineScope(Dispatchers.IO).launch {
-                onQuery(animeSource.search(queryTitle))
+                onQuery(plugin.search(queryTitle))
                 knop = "searched :)"
             }
         }) {
@@ -93,14 +89,20 @@ fun SearchBar(onQuery: (List<Anime>) -> Unit) {
 }
 
 @Composable
-fun AnimeCard(anime: Anime, onClick: () -> Unit) {
+fun AnimeCard(media: Media, onClick: () -> Unit) {
     Column(modifier = Modifier.padding(8.dp).width(200.dp).clickable(onClick = onClick)) {
-        KamelImage(
-            resource = asyncPainterResource(anime.coverImage),
-            contentDescription = anime.title.default,
-            modifier = Modifier.width(200.dp)
-        )
-        Text(anime.title.default, softWrap = true)
+        if (media.coverImage != null) {
+            KamelImage(
+                resource = asyncPainterResource(media.coverImage!!),
+                contentDescription = media.defaultTitle,
+                modifier = Modifier.width(200.dp)
+            )
+        } else {
+            Box(modifier = Modifier.width(200.dp)) {
+                Text(media.defaultTitle)
+            }
+        }
+        Text(media.defaultTitle, softWrap = true)
     }
 }
 

@@ -5,6 +5,7 @@ ktor = "2.3.8"
 kotlinx-datetime = "0.5.0"
 kamel-image = "0.9.1"
 logback = "1.5.0"
+kotlinx-serialization-json = "1.6.3"
 
 [libraries]
 ktor = { module = "io.ktor:ktor", version.ref = "ktor" }
@@ -14,9 +15,10 @@ apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel-image" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json"}
 
 [bundles]
-desktop = ["ktor", "ktor-client-core", "ktor-client-cio-jvm", "apollo-runtime", "kotlinx-datetime", "kamel-image", "logback-classic"]
+desktop = ["ktor", "ktor-client-core", "ktor-client-cio-jvm", "apollo-runtime", "kotlinx-datetime", "kamel-image", "logback-classic", "kotlinx-serialization-json"]
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
