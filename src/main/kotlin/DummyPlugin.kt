@@ -1,4 +1,5 @@
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import sources.Media
 import sources.anime.Anime
 import java.io.File
@@ -12,7 +13,7 @@ class DummyPlugin : Plugin {
         return emptyList()
     }
 
-    override fun setConfigOption(optionId: String, value: Json) {
+    override fun setConfigOption(optionId: String, value: JsonElement) {
 
     }
 
