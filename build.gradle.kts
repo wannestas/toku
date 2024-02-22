@@ -2,6 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.9.22"
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.apollo3)
 }

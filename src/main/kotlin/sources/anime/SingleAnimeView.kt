@@ -1,10 +1,7 @@
 package sources.anime
 
-import androidx.compose.foundation.layout.Box
-import KamelImage
+import Content
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,47 +9,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.kamel.image.asyncPainterResource
-import sources.Media
 
 @Composable
-fun SingleMediaView(media: Media, backOut: () -> Unit) {
+fun SingleMediaView(content: Content, backOut: () -> Unit) {
     val leftAreaWidth = 200.dp
     Column {
-        media.bannerImage?.let {
-            KamelImage(
-                resource = asyncPainterResource(it),
-                contentDescription = media.defaultTitle + " Banner",
-            )
-        }
-        Row {
-            if (media.coverImage != null) {
-                KamelImage(
-                    resource = asyncPainterResource(media.coverImage!!),
-                    contentDescription = media.defaultTitle,
-                    modifier = Modifier.width(leftAreaWidth)
-                )
-            } else {
-                Box(modifier = Modifier.width(leftAreaWidth)) {
-                    Text(media.defaultTitle)
-                }
-            }
-            media.description?.let { Text(it) }
-
-        }
-        Row {
-            InformationList(media, Modifier.width(leftAreaWidth))
-            ContentList(media)
-        }
+//        content.bannerImage?.let {
+//            KamelImage(
+//                resource = asyncPainterResource(it),
+//                contentDescription = content.defaultTitle + " Banner",
+//            )
+//        }
+//        Row {
+//            if (content.coverImage != null) {
+//                KamelImage(
+//                    resource = asyncPainterResource(content.coverImage!!),
+//                    contentDescription = content.defaultTitle,
+//                    modifier = Modifier.width(leftAreaWidth)
+//                )
+//            } else {
+//                Box(modifier = Modifier.width(leftAreaWidth)) {
+//                    Text(content.defaultTitle)
+//                }
+//            }
+//            content.description?.let { Text(it) }
+//
+//        }
+//        Row {
+//            InformationList(content, Modifier.width(leftAreaWidth))
+//            ContentList(content)
+//        }
     }
 }
 
 @Composable
-fun InformationList(media: Media, modifier: Modifier) {
+fun InformationList(content: Content, modifier: Modifier) {
     Column(modifier = modifier) {
-        for (informationTag in media.informationTags) {
-            InformationTagList(informationTag.key, informationTag.values)
-        }
+//        for (informationTag in content.informationTags) {
+//            InformationTagList(informationTag.key, informationTag.values)
+//        }
 //        anime.run {
 //            "Next Episode" tag nextAiringSchedule?.run { "Episode $episode: $time" }
 //            "Format" tag format
@@ -98,7 +93,7 @@ fun InformationTagList(type: String, content: List<String>) {
 }
 
 @Composable
-fun ContentList(media: Media) {
+fun ContentList(content: Content) {
     LazyColumn {
         // Add a single item
         item {

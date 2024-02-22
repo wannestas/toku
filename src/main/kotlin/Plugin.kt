@@ -1,6 +1,5 @@
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
-import sources.Media
 
 interface Plugin {
     fun getPluginDefinition(): PluginDefinition
@@ -9,18 +8,34 @@ interface Plugin {
 
     fun setConfigOption(optionId: String, value: JsonElement)
 
-    fun getContents(content: Content): List<Content>
+    fun getContents(id: String): List<Content>
 
-    fun search(title: String): List<Media>
+    fun search(query: String): List<Content>
 }
 
-interface Content {
-    val id: String
-    val name: String
-    val featureList: List<String>
-    val description: String?
+@Serializable
+data class Content(
+    val id: String,
+    val name: String,
+    val featureList: List<String>,
+    val description: String?,
     val informationList: JsonElement
-}
+)
 
-data class PluginDefinition(val id: String, val name: String, val description: String, val version: String, val features: List<String>)
-data class ConfigOption(val id: String, val name: String, val description: String, val type: String, val constraints: List<String>)
+@Serializable
+data class PluginDefinition(
+    val id: String,
+    val name: String,
+    val description: String,
+    val version: String,
+    val features: List<String>
+)
+
+@Serializable
+data class ConfigOption(
+    val id: String,
+    val name: String,
+    val description: String,
+    val type: String,
+    val constraints: List<String>
+)

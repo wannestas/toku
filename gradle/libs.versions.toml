@@ -6,6 +6,9 @@ kotlinx-datetime = "0.5.0"
 kamel-image = "0.9.1"
 logback = "1.5.0"
 kotlinx-serialization-json = "1.6.3"
+extism = "1.0.0"
+koin = "3.5.3"
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 [libraries]
 ktor = { module = "io.ktor:ktor", version.ref = "ktor" }
@@ -16,9 +19,22 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel-image" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json"}
+extism-sdk = { module = "org.extism.sdk:extism", version.ref = "extism" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 [bundles]
-desktop = ["ktor", "ktor-client-core", "ktor-client-cio-jvm", "apollo-runtime", "kotlinx-datetime", "kamel-image", "logback-classic", "kotlinx-serialization-json"]
+desktop = [
+    "ktor",
+    "ktor-client-core",
+    "ktor-client-cio-jvm",
+    "apollo-runtime",
+    "kotlinx-datetime",
+    "kamel-image",
+    "logback-classic",
+    "kotlinx-serialization-json",
+    "extism-sdk",
+    "koin-core",
+]
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
