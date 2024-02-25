@@ -1,27 +1,89 @@
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("jvm")
     kotlin("plugin.serialization") version "1.9.22"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.apollo3)
 }
 
 group = "me.wtas.toku"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    google()
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+    jvm("desktop")
+
+    sourceSets {
+        val desktopMain by getting
+
+        androidMain.dependencies {
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+        }
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.components.resources)
+            implementation(compose.material3)
+            // see libs.versions.toml
+            implementation(libs.bundles.desktop)
+        }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+        }
+    }
+//    jvmToolchain(17) // also applies to the java task
+    compilerOptions {
+        freeCompilerArgs = listOf("-Xcontext-receivers")
+    }
 }
 
-dependencies {
-    implementation(compose.desktop.currentOs)
-    implementation(compose.material3)
-    // see libs.versions.toml
-    implementation(libs.bundles.desktop)
+
+android {
+    namespace = "me.wtas.toku"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+
+    defaultConfig {
+        applicationId = "me.wtas.toku"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    dependencies {
+        debugImplementation(libs.compose.ui.tooling)
+    }
 }
+
 
 compose.desktop {
     application {
@@ -35,21 +97,14 @@ compose.desktop {
     }
 }
 
-apollo {
-    service("anilist") {
-        packageName.set("$group.graphql.anilist")
-        srcDir("src/main/graphql/anilist")
-        introspection {
-            endpointUrl.set("https://graphql.anilist.co")
-            schemaFile.set(file("src/main/graphql/anilist/schema.graphqls"))
-        }
-
-    }
-}
-
-kotlin {
-    jvmToolchain(17) // also applies to the java task
-    compilerOptions {
-        freeCompilerArgs = listOf("-Xcontext-receivers")
-    }
-}
+//apollo {
+//    service("anilist") {
+//        packageName.set("$group.graphql.anilist")
+//        srcDir("src/main/graphql/anilist")
+//        introspection {
+//            endpointUrl.set("https://graphql.anilist.co")
+//            schemaFile.set(file("src/main/graphql/anilist/schema.graphqls"))
+//        }
+//
+//    }
+//}
